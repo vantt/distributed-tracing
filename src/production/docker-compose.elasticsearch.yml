@@ -1,0 +1,32 @@
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+
+version: "3.7"
+
+networks:
+  my-net:
+    external: true
+    name: my-net
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1536m -Xmx1536m"
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - /miczone/data/elasticsearch:/usr/share/elasticsearch/data
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      my-net: {}

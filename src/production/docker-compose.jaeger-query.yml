@@ -1,0 +1,27 @@
+version: "3.7"
+
+networks:
+  my-net:
+    external: true
+    name: my-net
+
+services:
+  jaeger-query:
+    image: jaegertracing/jaeger-query:1.21
+    restart: always
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - JAEGER_DISABLED=true # will not see 'jaeger-query' in UI anymore
+    command:
+      [
+        "--es.server-urls=http://elasticsearch:9200",
+        "--es.use-aliases=true",
+        "--es.max-span-age=168h0m0s",
+        "--query.max-clock-skew-adjustment=0s",
+        "--log-level=${QUERY_LOG_LEVEL}",
+      ]
+    ports:
+      - 16686:16686 # /api/* endpoints and Jaeger UI at /
+      - 16687:16687 # admin port: health check at / and metrics at /metrics
+    networks:
+      my-net: {}

@@ -1,0 +1,28 @@
+version: "3.7"
+
+networks:
+  my-net:
+    external: true
+    name: my-net
+
+services:
+  jaeger-ingester:
+    image: jaegertracing/jaeger-ingester:1.21
+    restart: always
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+    command:
+      [
+        "--kafka.consumer.protocol-version=${KAFKA_PROTOCOL_VERSION}",
+        "--kafka.consumer.brokers=${KAFKA_BROKERS}",
+        "--kafka.consumer.client-id=${KAFKA_CONSUMER_CLIENT_ID}",
+        "--kafka.consumer.group-id=${KAFKA_CONSUMER_GROUP_ID}",
+        "--kafka.consumer.topic=${KAFKA_TOPIC}",
+        "--es.server-urls=http://elasticsearch:9200",
+        "--es.use-aliases=true",
+        "--log-level=${INGESTER_LOG_LEVEL}",
+      ]
+    ports:
+      - 14270:14270 # admin port: health check at / and metrics at /metrics
+    networks:
+      my-net: {}

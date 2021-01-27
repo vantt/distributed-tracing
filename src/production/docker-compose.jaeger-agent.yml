@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  jaeger-agent:
+    image: jaegertracing/jaeger-agent:1.21
+    restart: always
+    environment:
+      - SPAN_STORAGE_TYPE=kafka
+    command: [
+        "--reporter.grpc.host-port=${AGENT_COLLECTOR_GRPC_HOST_PORT}", # https://www.jaegertracing.io/docs/1.21/deployment/#discovery-system-integration
+        "--log-level=${AGENT_LOG_LEVEL}",
+      ]
+    ports:
+      - 127.0.0.1:6831:6831/udp # accept jaeger.thrift in compact Thrift protocol used by most current Jaeger clients
+      - 127.0.0.1:6832:6832/udp # accept jaeger.thrift in binary Thrift protocol used by Node.js Jaeger client (because thriftrw npm package does not support compact protocol)
+      - 127.0.0.1:5778:5778 # serve configs, sampling strategies
+      - 127.0.0.1:5775:5775 # accept zipkin.thrift in compact Thrift protocol (deprecated; only used by very old Jaeger clients, circa 2016)
+      - 14271:14271 # admin port: health check at / and metrics at /metrics
+    # extra_hosts:
+    #   - "${AGENT_EXTRA_HOSTS_COLLECTOR}"

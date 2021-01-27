@@ -1,0 +1,19 @@
+# https://www.elastic.co/guide/en/kibana/current/docker.html
+
+version: "3.7"
+
+networks:
+  my-net:
+    external: true
+    name: my-net
+
+services:
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.0
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    networks:
+      my-net: {}

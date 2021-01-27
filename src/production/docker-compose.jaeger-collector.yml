@@ -1,0 +1,28 @@
+version: "3.7"
+
+networks:
+  my-net:
+    external: true
+    name: my-net
+
+services:
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector:1.21
+    restart: always
+    environment:
+      - SPAN_STORAGE_TYPE=kafka
+    command:
+      [
+        "--kafka.producer.protocol-version=${KAFKA_PROTOCOL_VERSION}",
+        "--kafka.producer.brokers=${KAFKA_BROKERS}",
+        "--kafka.producer.topic=${KAFKA_TOPIC}",
+        "--kafka.producer.compression=${KAFKA_PRODUCER_COMPRESSION}",
+        "--log-level=${COLLECTOR_LOG_LEVEL}",
+      ]
+    ports:
+      - 14250:14250 # used by jaeger-agent to send spans in model.proto format
+      - 14268:14268 # can accept spans directly from clients in jaeger.thrift format over binary thrift protocol
+      - 9411:9411 # can accept Zipkin spans in Thrift, JSON and Proto (disabled by default)
+      - 14269:14269 # admin port: health check at / and metrics at /metrics
+    networks:
+      my-net: {}

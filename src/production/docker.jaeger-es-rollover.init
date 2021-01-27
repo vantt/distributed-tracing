@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ -f .env ]; then
+    source .env
+fi
+
+docker run \
+    --name distributed-tracing_jaeger-es-rollover_init \
+    \
+    --rm \
+    \
+    --network=my-net \
+    \
+    jaegertracing/jaeger-es-rollover:1.21 \
+    \
+    init http://elasticsearch:9200

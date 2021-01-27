@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ -f .env ]; then
+    source .env
+fi
+
+docker run \
+    --name distributed-tracing_jaeger-agent \
+    \
+    --restart=always \
+    \
+    -d \
+    \
+    -e SPAN_STORAGE_TYPE=kafka \
+    \
+    -p 127.0.0.1:6831:6831/udp \
+    -p 127.0.0.1:6832:6832/udp \
+    -p 127.0.0.1:5778:5778 \
+    -p 127.0.0.1:5775:5775/udp \
+    -p 14271:14271 \
+    \
+    --network=bridge \
+    \
+    --cpus=$AGENT_CPUS \
+    \
+    --memory=$AGENT_MEMORY \
+    --memory-swap=0 \
+    --memory-swappiness=0 \
+    --memory-reservation=$AGENT_MEMORY_RESERVATION \
+    --oom-kill-disable \
+    \
+    jaegertracing/jaeger-agent:1.21 \
+    \
+    --reporter.grpc.host-port=$AGENT_COLLECTOR_GRPC_HOST_PORT \
+    --log-level=$AGENT_LOG_LEVEL
