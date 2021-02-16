@@ -52,7 +52,7 @@
 
 ### View log
 
-    docker logs -f -n100 miczone_distributed_tracing_jaeger-agent_1
+    docker logs -f -n100 distributed_tracing_jaeger-agent_1
 
 ### Load test
 
@@ -61,4 +61,4 @@
 
 ### Optional command
 
-    docker exec -it miczone_distributed_tracing_jaeger-agent_1 /bin/sh
+    docker exec -it distributed_tracing_jaeger-agent_1 /bin/sh
