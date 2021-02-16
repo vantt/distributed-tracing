@@ -1,4 +1,4 @@
-# Miczone Distributed Tracing
+# Distributed Tracing
 
 ![architecture-v2.png](doc/image/architecture-v2.png)
 
@@ -10,9 +10,9 @@
 
 ### Prepare for Elasticsearch
 
-    mkdir /miczone/data/elasticsearch -p
-    chmod g+rwx /miczone/data/elasticsearch
-    chgrp 0 /miczone/data/elasticsearch
+    mkdir /data/elasticsearch -p
+    chmod g+rwx /data/elasticsearch
+    chgrp 0 /data/elasticsearch
 
     Set vm.max_map_count to at least 262144
         1. open file: /etc/sysctl.conf
